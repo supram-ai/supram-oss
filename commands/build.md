@@ -3,16 +3,13 @@ name: harness-build
 description: Implement features using the approved evidence contract
 persona: Developer
 gates:
-  - check: 'design.md "Ref: APPROVED" (if workflow_level != S; ABSENT defaults to M/L)'
-    on_fail: STOP, route to design
-  - check: tasks.md exists (if workflow_level != S; ABSENT defaults to M/L)
-    on_fail: STOP, route to tasks
+  - check: 'spec.yaml "Ref: APPROVED" (if workflow_level != S; ABSENT defaults to M/L)'
+    on_fail: STOP, route to /h:approve (Human Gate 1)
   - check: no BLOCKED.md in active features
     on_fail: STOP, route to blocked-state recovery (Supram runtime)
 
 preflight:
-  - read_design (architecture, interfaces; if workflow_level != S)
-  - read_tasks (what to build; if workflow_level != S)
+  - read_spec (requirements, design, and tasks; if workflow_level != S)
   - read_review_pre_verify (to fix code defects if returning from failure)
   - read_deferred_ledger (if deferred.md exists in active feature)
 
@@ -28,7 +25,7 @@ actions:
     - run_required_evidence
     - run_existing_regression_suite
     - if evidence_fails: STOP, fix evidence failures
-    - if evidence_passes: route to /h:verify if workflow_level == S, else to /h:review-pre-verify
+    - if evidence_passes: route to /h:review-pre-verify if workflow_level == L, else to /h:verify
 
 must_do:
   - Strictly follow the Ponytail YAGNI framework when writing code

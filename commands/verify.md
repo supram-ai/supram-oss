@@ -3,8 +3,8 @@ name: harness-verify
 description: Verify production-ready
 persona: Gatekeeper
 gates:
-  - check: 'review-pre-verify.md "Ref: APPROVED" (if workflow_level != S; ABSENT defaults to M/L)'
-    on_fail: STOP, route to review-pre-verify
+  - check: 'review-pre-verify.md "Ref: APPROVED" (L-level only)'
+    on_fail: STOP, route to /h:review-pre-verify
   - check: all tasks complete (if workflow_level != S; ABSENT defaults to M/L)
     on_fail: STOP, route to build
   - check: all required evidence passes

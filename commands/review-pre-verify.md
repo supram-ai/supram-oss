@@ -4,7 +4,7 @@ description: 'Sr Tech Lead fresh-eyes review in isolated context. Not a human ga
 persona: Sr Tech Lead
 reason: Fresh-eyes review, completely isolated from the build process
 gates:
-  - check: spec.yaml (or spec.md) exists
+  - check: spec.yaml exists
     on_fail: STOP, route to define (or /h:change)
   - check: all tasks complete
     on_fail: STOP, route to build

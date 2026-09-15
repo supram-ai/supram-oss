@@ -55,8 +55,8 @@ In the reference model each command runs in a **subagent** with the right person
 | `/h:change` | Developer | Reads change context, writes delta | CHG record + code |
 | `/h:status` | Manager | N/A — read only | status snapshot |
 
-Legacy standalone contracts retained for reference (not part of the current flow): `/h:design`,
-`/h:tasks`, `/h:review-pre-build`.
+Design and tasks are internalised into `/h:define`; there are no separate design, tasks, or
+pre-build-review commands.
 
 ### How Control Flows
 
@@ -158,7 +158,7 @@ All personas MUST adhere to the **Ponytail YAGNI Framework** (You Ain't Gonna Ne
 1. **Brutally reject over-engineered architectures**.
 2. **Do not install third-party dependencies** if native platform APIs (HTML5, standard libraries) can solve the problem.
 3. **Never write complex abstraction layers** for simple problems.
-If a design or code PR violates this, it must be rejected during the `review-pre-verify` gate (and `review-pre-build` in legacy standalone flows).
+If a design or code PR violates this, it must be rejected during the `review-pre-verify` review.
 
 ## Data, ML, and Quantitative Strategy Projects Policy
 
@@ -286,7 +286,7 @@ The protocol uses a **multi-agent orchestration model** where the Manager spawns
   - Checks gates after subagent completes
   - Routes to next step or stops if gates fail
   - Maintains workflow state
-  - *Note: The Manager orchestrates, but architecture review belongs to the Sr Architect, and actual approval belongs to the human.*
+  - *Note: The Manager orchestrates, but approval belongs to the human at Gates 1 and 2.*
 
 ### Subagent Personas
 Each command runs in an isolated subagent context with a specific persona:
@@ -295,7 +295,6 @@ Each command runs in an isolated subagent context with a specific persona:
 |--------------|------------------|-----------------------------|--------------------------|
 | **Manager** | `/h:init`, `/h:upgrade-harness`, `/h:status` | *None (Parent Context)* | Orchestrates the workflow execution, manages the subagent invocation loop, and checks status/quality gates. Run directly in the main/parent shell. |
 | **Analyst** | `/h:define` | `agents/collaborator/agent.md` | Explores the problem space and drafts the unified feature specification (`spec.yaml`, including design and tasks). |
-| **Sr Architect** | `/h:review-pre-build` (legacy) | `agents/sr-architect/agent.md` | Audits design documents against the BRD and constitution (legacy standalone flow). |
 | **Developer** | `/h:build`, `/h:change` | `agents/developer/agent.md` | Implements against the approved Evidence Contract and executes the unified bug/CR change workflow. |
 | **Sr Tech Lead** | `/h:review-pre-verify` (L only) | `agents/sr-tech-lead/agent.md` | Audits implementation against the approved spec, verifying alignment and conformance. |
 | **Gatekeeper** | `/h:approve`, `/h:verify`, `/h:release` | `agents/gatekeeper/agent.md` | Validates gate prerequisites, runs evidence validation, and transmits explicit human approvals at Gates 1 and 2. |
@@ -305,7 +304,6 @@ Each command runs in an isolated subagent context with a specific persona:
 - **Human**: owns both gate decisions (`/h:approve` before build, `/h:release` after verify).
 - **Gatekeeper**: validates readiness and transmits the explicit human decision.
 - **Manager**: coordinates but cannot perform specialist work itself. Writes review and verification reports through delegation.
-- **Sr Architect**: checks design before approval (legacy standalone flow).
 - **Sr Tech Lead**: checks implementation before verification (L-level projects).
 - **Analyst**: owns design research. Typography, branding, visual references, accessibility, BDD, TDD, and Event Storming are *skills*, not separate personas.
 

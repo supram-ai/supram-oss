@@ -11,6 +11,9 @@
   installation) are provided by the Supram engine (paid offering), not by this repository.
 - Added `MIGRATION.md` describing migration of `.supram-oss/` project state to `.supram/`
   when adopting the paid product.
+- Unified slice contract: `/h:define` produces a single `spec.yaml` (design and tasks
+  internalised). Two human gates: `/h:approve` (before build) and `/h:release` (after verify).
+  `/h:review-pre-verify` is an L-level-only agent review, not a human gate.
 
 ## Removed from upstream `harness-eng`
 
@@ -23,6 +26,9 @@ repository cannot enforce conversion walls:
 - skill selection/installation
 - release automation and pre-commit hook
 - runtime-specific templates (`init-layout.json`, `migration-consent.yaml`)
+- legacy standalone contracts and their artifacts: `/h:design`, `/h:tasks`,
+  `/h:review-pre-build`, the Sr Architect persona, and the standalone `design.md`/`tasks.md`/
+  `spec.md` templates (superseded by `spec.yaml`)
 
 ## License
 

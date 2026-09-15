@@ -33,7 +33,7 @@ agent_contract:
 **Branch**: [BRANCH]
 **Release Ref**: [APPROVED|PENDING]
 
-**Input**: specs/[FEATURE]/spec.md (acceptance criteria), tasks.md (completed tasks)
+**Input**: the active `spec.yaml` (acceptance criteria and task list)
 
 ---
 
@@ -89,7 +89,7 @@ agent_contract:
 - [ ] Constitution rules followed
 
 **Completeness:**
-- [ ] All tasks in tasks.md marked [X]
+- [ ] All tasks in the spec's task list marked done
 - [ ] No failing tests
 - [ ] No BLOCKED items remaining
 - [ ] Documentation updated (if applicable)

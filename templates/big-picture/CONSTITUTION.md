@@ -149,17 +149,15 @@ release_policy:
 
 ## Logical Roles and Agent Mappings
 
-> Legacy standalone contracts (`/h:design`, `/h:tasks`, `/h:review-pre-build`) are listed for
-> reference. The current model internalises design and tasks into `/h:define`. Human Gate 1 is
-> `/h:approve`; the L-level-only agent review is `/h:review-pre-verify`.
+> Design and tasks are internalised into `/h:define`. Human Gate 1 is `/h:approve`; the
+> L-level-only agent review is `/h:review-pre-verify`.
 
 | Logical Role | Commands Managed | File-Based Agent Definition | Responsibility & Context |
 |--------------|------------------|-----------------------------|--------------------------|
 | **Manager** | `/h:init`, `/h:upgrade-harness`, `/h:status` | *None (Parent Context)* | Orchestrates the workflow execution, manages the subagent invocation loop, and checks status/quality gates. Run directly in the main/parent shell. |
-| **Analyst** | `/h:define`, `/h:design` (legacy) | `agents/collaborator/agent.md` | Explores problem space, drafts feature specifications (`spec.yaml`), and architects designs. |
-| **Sr Architect** | `/h:review-pre-build` (legacy) | `agents/sr-architect/agent.md` | Audits proposed design documents against the BRD and project constitution before the design is presented for human approval. |
+| **Analyst** | `/h:define` | `agents/collaborator/agent.md` | Explores the problem space and drafts the unified feature specification (`spec.yaml`, including design and tasks). |
 | **Developer** | `/h:build`, `/h:change` | `agents/developer/agent.md` | Implements against the approved Evidence Contract. |
-| **Sr Tech Lead** | `/h:review-pre-verify` (L only) | `agents/sr-tech-lead/agent.md` | Audits implementation code against the approved design and spec, verifying alignment and syntax conformance. |
+| **Sr Tech Lead** | `/h:review-pre-verify` (L only) | `agents/sr-tech-lead/agent.md` | Audits implementation code against the approved spec, verifying alignment and syntax conformance. |
 | **Gatekeeper** | `/h:approve`, `/h:verify`, `/h:release` | `agents/gatekeeper/agent.md` | Validates gate prerequisites, runs testing validation, and transmits explicit human approvals at Gates 1 and 2. |
 
 ---

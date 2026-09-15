@@ -3,7 +3,7 @@ name: harness-change
 description: Unified change workflow command for bugs and CRs.
 persona: Developer
 gates:
-  - check: spec.yaml (or spec.md) exists (to read workflow level and constraints)
+  - check: spec.yaml exists (to read workflow level and constraints)
     on_fail: STOP, run /h:define first
 
 actions:
@@ -11,7 +11,7 @@ actions:
   - evaluate_promotion_criteria: promote to full /h:define if the change touches a locked stack, public interface, persistent schema, security boundary, or architecture boundary
   - record_baseline: capture baseline revision hash, dirty state, and observed/reproduction behavior
   - record_worktree_ownership: populate worktree.yaml using templates/worktree.yaml classifying files to touch as authorized, untracked as generated, and others as preexisting
-  - read_prior_decisions: read decisions from active spec.yaml (or spec.md), design.md, and past slices
+  - read_prior_decisions: read decisions from the active spec.yaml and past slices
   - write_change_record: create CHG-NNN.yaml (or CHG-NNN.md) using templates/feature/change.md carrying forward baseline, delta, decisions, and relevant prior decisions
   - implement_smallest_delta: implement the change using the smallest required code delta
   - run_focused_evidence: verify the change on the affected flow and boundary only

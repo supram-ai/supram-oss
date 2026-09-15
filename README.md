@@ -57,9 +57,8 @@ them until a person approves.
         → [/h:review-pre-verify — L only] → /h:verify → [Human Gate 2: /h:release]
 ```
 
-Design and tasks are internalised by `/h:define`; they are not separate steps in the current
-model. Legacy standalone contracts (`/h:design`, `/h:tasks`, `/h:review-pre-build`) are retained
-under `commands/` for reference only.
+Design and tasks are internalised by `/h:define` into a single `spec.yaml`; there are no separate
+design or tasks commands.
 
 ### Commands
 
