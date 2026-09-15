@@ -33,14 +33,14 @@ read https://github.com/AvonS/supram-oss/blob/main/commands/init.md and follow t
 
 | Capability | This repo (supram-oss) | Supram engine (paid) |
 |---|---|---|
-| Workflow, templates, gates, personas | ✅ | ✅ |
-| Command contracts (reference) | ✅ | ✅ |
-| Deterministic gate enforcement | — | ✅ |
-| Evidence capture and verification | — | ✅ |
-| Status dashboard and approvals | — | ✅ |
-| Memory, project graph, migrations | — | ✅ |
-| Skill selection and installation | — | ✅ |
-| Multi-project / team workflows | — | ✅ |
+| Workflow, templates, gates, personas | Yes | Yes |
+| Command contracts (reference) | Yes | Yes |
+| Deterministic gate enforcement | — | Yes |
+| Evidence capture and verification | — | Yes |
+| Status dashboard and approvals | — | Yes |
+| Memory, project graph, migrations | — | Yes |
+| Skill selection and installation | — | Yes |
+| Multi-project / team workflows | — | Yes |
 
 The protocol is a **file-based convention**, not a tool dependency. It works whether you use
 Claude, Copilot, or Cursor. The runtime is what makes it dependable.

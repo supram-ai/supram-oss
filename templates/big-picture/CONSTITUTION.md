@@ -67,7 +67,7 @@ must_not_do:
 
 ## Core Principles
 
-### Harness Principles (Universal — Do Not Modify)
+### Protocol Principles (Universal — Do Not Modify)
 
 #### I. Proportionate Evidence
 Define the minimum convincing evidence for each change before implementation. Use TDD for executable logic when a meaningful automated test exists. Do not require BDD, unit, integration, UI, or mutation testing by default; require only evidence justified by behavior, risk, and reversibility.
@@ -79,7 +79,7 @@ Use standard library before adding dependencies. Justify every dependency additi
 Never assume a framework, library, or API feature exists without verifying. Check source, check docs, write a probe if uncertain.
 
 #### IV. Files Are the Instructions
-The harness works because the files are the instructions. The folder structure is the state machine.
+The protocol works because the files are the instructions. The folder structure is the state machine.
 
 #### V. Human in Control
 The user owns the what and the why. The agent owns the how — within boundaries the user approved. Never self-approve.
@@ -166,7 +166,7 @@ release_policy:
 
 ## Architecture Rules (Project-Specific)
 
-> *These rules define how the code should be structured for THIS project. They are NOT about the harness. Examples: "Separate game logic from UI", "Use immutable state", "All API calls must go through a service layer", "Database queries must use parameterized statements".*
+> *These rules define how the code should be structured for THIS project. They are NOT about the protocol. Examples: "Separate game logic from UI", "Use immutable state", "All API calls must go through a service layer", "Database queries must use parameterized statements".*
 
 <!-- MUST INPUT: Add 3-5 project-specific architecture rules -->
 
@@ -178,7 +178,7 @@ release_policy:
 
 ## Naming Conventions (Project-Specific)
 
-> *These are naming conventions for THIS project's code, NOT for harness commands or branches. Examples: function names, file names, component names, variable names.*
+> *These are naming conventions for THIS project's code, NOT for protocol commands or branches. Examples: function names, file names, component names, variable names.*
 
 <!-- MUST INPUT: Add project-specific naming conventions -->
 
@@ -265,10 +265,10 @@ must_not_do:
 
 - [ ] All placeholder tokens replaced with concrete values
 - [ ] No remaining `[BRACKET_TOKENS]` except intentionally deferred items
-- [ ] **Project principles are present** (2-5 project-specific principles, not harness principles)
-- [ ] **Architecture rules are project-specific** (not harness-level rules)
-- [ ] **Naming conventions are for project code** (not harness commands/branches)
-- [ ] Harness principles (I-V) are included verbatim
+- [ ] **Project principles are present** (2-5 project-specific principles, not protocol principles)
+- [ ] **Architecture rules are project-specific** (not protocol-level rules)
+- [ ] **Naming conventions are for project code** (not protocol commands/branches)
+- [ ] The universal Protocol Principles (I-V) are included verbatim
 - [ ] Principles are declarative, testable, free of vague language
 - [ ] Version matches bump rationale (MAJOR/MINOR/PATCH)
 - [ ] Dates in ISO format YYYY-MM-DD

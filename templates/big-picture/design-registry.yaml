@@ -1,6 +1,6 @@
 # CANONICAL REGISTRY
-# This file (.supram-oss/templates/big-picture/design-registry.yaml) is maintained by the harness.
-# It is updated automatically during /h:upgrade-harness.
+# This file (.supram-oss/templates/big-picture/design-registry.yaml) is part of the protocol reference.
+# The Supram engine refreshes it during /h:upgrade-harness; in protocol-only projects, edit by hand.
 # Do NOT add project-specific UI systems here.
 # Instead, add them to the local project registry: .supram-oss/design-registry.yaml
 design_registry:

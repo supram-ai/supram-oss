@@ -17,7 +17,20 @@ actions:
   - scan: project for existing docs (README, PRD, ADR, code)
   - classify_scenario: [A: greenfield, B: brownfield, C: documented]
   - bind_clarification_context: Treat every requested user answer as initialization input until this command stops
-  - create_scaffold: create the project scaffold described by this protocol and the provided templates
+  - create_scaffold:
+    - create the state directory `.supram-oss/` in the project root
+    - copy the protocol reference (commands/, agents/, templates/, VERSION) from this repository into .supram-oss/
+    - copy `AGENTS.md` to the project root `./AGENTS.md`
+    - create the initial state files (from the matching templates):
+      - create .supram-oss/CONSTITUTION.md
+      - create .supram-oss/BRD.md
+      - create .supram-oss/ARCHITECTURE.md
+      - create .supram-oss/technology.yaml (start from templates/technology.example.yaml)
+      - create .supram-oss/design-registry.yaml
+      - create .supram-oss/SLICE_LOG.md
+      - create .supram-oss/PHASES.md
+      - create .supram-oss/phases/active/ and .supram-oss/phases/archive/
+      - create .supram-oss/specs/active/ and .supram-oss/specs/done/
   - record_generation: the Supram engine records product, lineage, schema, and release in the project state directory (`.supram-oss/manifest.json`; `.supram/manifest.json` after migrating to the paid product)
   - if_brownfield: convert existing agents.md, claude.md, .cursorrules, or other agent files to .supram-oss/CONSTITUTION.md
   - symlink_agent_configs: symlink claude.md, .cursorrules, .clinerules to ./AGENTS.md
@@ -32,13 +45,13 @@ actions:
   - derive_runtime_smoke: add the cheapest real-entry-point smoke check to the project integration suite for executable applications
   - present: all docs to human for review
   - wait: human approval
-  - commit: initial harness setup
-  - report_next_command: Derive the earliest permitted command from harness filesystem state
+  - commit: initial supram-oss setup
+  - report_next_command: Derive the earliest permitted command from the project filesystem state
   - stop_after_init: Return control to the user without invoking another workflow command
 
 must_do:
   - Get human approval on all docs
-  - Copy engine folders exactly as specified
+  - Copy exactly the folders and state files enumerated in `create_scaffold`
   - Preserve all existing agent rules (claude.md, .cursorrules, etc.) into CONSTITUTION.md
   - Symlink all alternative agent config files to AGENTS.md
   - Explain what was derived and why
