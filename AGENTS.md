@@ -28,7 +28,7 @@ migration code in this repository.
 
 A file-based workflow system that guides AI agents through software development. The protocol:
 - **Controls the workflow** through a state machine defined in templates
-- **Enforces human gates** at critical decision points (design approval, release approval)
+- **Enforces gates** at critical decision points (agent review, release approval)
 - **Prevents agent drift** by requiring explicit phase transitions
 - **Tracks progress** through structured documents and logs
 
@@ -66,7 +66,7 @@ Manager receives request
   ↓
 Manager spawns /h:build subagent (Developer persona)
   ↓
-Subagent reads tasks.md, implements each task against the approved Evidence Contract, commits
+Subagent reads spec.yaml, implements each task against the approved Evidence Contract, commits
   ↓
 Subagent completes → returns control to Manager
   ↓
