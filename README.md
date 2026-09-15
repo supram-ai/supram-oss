@@ -150,9 +150,13 @@ review them before adoption.
 ## Migrating to the paid product
 
 When you adopt the paid product, your `.supram-oss/` project state migrates to `.supram/`.
-The migration is implemented by the **Supram CLI** (`hasp-cli`), not by this repository;
-this repo only documents the state boundary. See [MIGRATION.md](MIGRATION.md). The protocol
-never needs to be re-learned; only the runtime boundary changes.
+The migration is implemented by the **Supram CLI**, not by this repository; this repo only
+documents the state boundary. See [MIGRATION.md](MIGRATION.md). The protocol never needs to be
+re-learned; only the runtime boundary changes.
+
+`supram-oss` is the current name of the community edition and descends from `harness-eng`; the
+artifact schema, gates, and evidence contract are continuous across the rename. Engine-side
+migration is deferred to the CLI's port to `supram-cli` (see §0 of MIGRATION.md).
 
 ---
 

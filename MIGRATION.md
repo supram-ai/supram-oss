@@ -1,14 +1,38 @@
 # Migrating supram-oss state to the paid product
 
-> **Ownership:** the migration is implemented in the **Supram CLI** (`hasp-cli`), not in this
-> repository. `supram-oss` ships no migration code. This document only describes the state
-> boundary so the protocol and the runtime stay compatible.
+> **Ownership:** the migration is implemented in the **Supram CLI**, not in this repository.
+> `supram-oss` ships no migration code. This document only describes the state boundary so the
+> protocol and the runtime stay compatible.
 
 This document answers a specific question: **when a project that uses `supram-oss` upgrades to
 the paid Supram engine, what happens to its state?**
 
 Short answer: the state directory is renamed from `.supram-oss/` to `.supram/`. The protocol
 you already follow does not change. The only thing that changes is who executes and enforces it.
+
+---
+
+## 0. Lineage and naming
+
+`supram-oss` is the current name of the community, file-based edition. It descends from the
+earlier `harness-eng` edition; the workflow, artifact schema, gates, and evidence contract are
+continuous across the rename.
+
+| Generation | Name | State directory | Notes |
+|---|---|---|---|
+| 0 | `harness-eng` | `.harness-eng/` | original community edition |
+| 1 | `supram-oss` | `.supram-oss/` | current OSS protocol (this repo) |
+| paid | Supram CLI / Hasp family | `.supram/` | licensed runtime and hosted services |
+
+**Engine-side migration is deferred.** The paid CLI currently reads `.harness-eng/`. Wiring it to
+detect and migrate `.harness-eng/` → `.supram-oss/` → `.supram/` is planned as part of the
+CLI's rename/port to **`supram-cli`** (from its current working name `hasp-cli`). Until that
+lands, cross-edition migration is not connected end-to-end; this document is the contract the
+CLI will implement.
+
+Lineage is identified by the manifest (`system`, `runtime`, `lineage`, `format_version`), not by
+renaming directories to advertise a generation — consistent with the platform's compatibility
+principle ("upgrade the project, never reinitialize it").
 
 ---
 
