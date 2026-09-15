@@ -4,7 +4,7 @@ description: Refresh the supram-oss protocol reference and, when adopting the pa
 
 persona: Manager
 reason: Bootstrap operation
-canonical_url: https://raw.githubusercontent.com/AvonS/supram-oss/main/commands/upgrade-harness.md
+canonical_url: https://raw.githubusercontent.com/supram-ai/supram-oss/main/commands/upgrade-harness.md
 execution_source: fetched_canonical_required
 
 gates:

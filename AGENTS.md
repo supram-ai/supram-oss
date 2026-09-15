@@ -253,7 +253,7 @@ Skills are not static. Improve them as you work:
 - **Repeated wrong pattern** → skill is incomplete, fix it
 - **`<!-- MISSED: -->` flag** → generated docs may flag missing coverage
 
-Project-specific corrections may update `.supram-oss/skills/<name>/SKILL.md` with WRONG/CORRECT pairs. Reusable corrections belong in `https://github.com/AvonS/supram-oss-skills` and must pass that repository's review before projects upgrade to them.
+Project-specific corrections may update `.supram-oss/skills/<name>/SKILL.md` with WRONG/CORRECT pairs. Reusable corrections belong in `https://github.com/supram-ai/supram-oss-skills` and must pass that repository's review before projects upgrade to them.
 
 ### Skill Selection and Trust
 

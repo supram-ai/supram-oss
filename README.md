@@ -17,7 +17,7 @@ structured templates, and explicit phase transitions for large BRDs.
 Open your AI agent in your project directory and paste this:
 
 ```
-read https://github.com/AvonS/supram-oss/blob/main/commands/init.md and follow the instructions to initialize supram-oss in this folder
+read https://github.com/supram-ai/supram-oss/blob/main/commands/init.md and follow the instructions to initialize supram-oss in this folder
 ```
 
 | Folder state | What the agent does |
@@ -191,6 +191,6 @@ workflows — are documented in *Harness Engineering in Practice*:
 
 ## License
 
-Copyright (c) 2026 [Avon Software Labs](https://avons.github.io).
+Copyright (c) 2026 Supram Code Tech Pvt Ltd. See [NOTICE](NOTICE).
 
 Licensed under the GNU Affero General Public License v3.0 only (`AGPL-3.0-only`). See [LICENSE](LICENSE).
