@@ -1,0 +1,39 @@
+---
+name: harness-approve
+description: 'Legacy human design-approval gate (retired in the unified define flow; kept for reference)'
+persona: Gatekeeper
+status: retired
+
+notes: |
+  In the current model, design and tasks are internalised by /h:define and reviewed through
+  behaviour playback, and the agent gate is /h:review-pre-verify. This contract documents the
+  legacy standalone design gate for projects that still branch design out.
+
+gates:
+  - check: 'design.md exists'
+    on_fail: STOP, route to /h:design (legacy flow)
+  - check: 'design.md "Ref: PENDING"'
+    on_fail: STOP, design already approved or rejected
+
+actions:
+  - present_design_to_human
+  - wait_for_human_response
+  - if approved:
+    - set_ref: 'APPROVED (in design.md)'
+    - prompt_testing_level: ask user to confirm or select the feature's Testing Level (S/M/L) and update design.md header
+    - route: to /h:tasks
+  - if changes_requested:
+    - set_ref: 'REJECTED (in design.md)'
+    - route_to_design
+
+must_do:
+  - Present full design document
+  - Wait for explicit human approval
+  - Confirm or select Testing Level (S/M/L) and update design.md header upon approval
+  - Update Ref marker in design.md
+
+must_not_do:
+  - Approve without human confirmation
+  - Proceed without Ref: APPROVED
+---
+<!-- Reference contract. Runtime execution and enforcement are provided by the Supram engine (paid offering). -->

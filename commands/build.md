@@ -1,0 +1,50 @@
+---
+name: harness-build
+description: Implement features using the approved evidence contract
+persona: Developer
+gates:
+  - check: 'design.md "Ref: APPROVED" (if workflow_level != S; ABSENT defaults to M/L)'
+    on_fail: STOP, route to design
+  - check: tasks.md exists (if workflow_level != S; ABSENT defaults to M/L)
+    on_fail: STOP, route to tasks
+  - check: no BLOCKED.md in active features
+    on_fail: STOP, route to blocked-state recovery (Supram runtime)
+
+preflight:
+  - read_design (architecture, interfaces; if workflow_level != S)
+  - read_tasks (what to build; if workflow_level != S)
+  - read_review_pre_verify (to fix code defects if returning from failure)
+  - read_deferred_ledger (if deferred.md exists in active feature)
+
+actions:
+  - for_each_task (if workflow_level != S, else implement spec requirements directly):
+    - execute_ponytail_decision_ladder: evaluate before adding any dependencies or abstractions
+    - produce_required_evidence: follow the approved evidence contract
+    - use_tdd_for_executable_logic: confirm failure before implementation when a meaningful executable test exists (for deterministic invariants not provable by functional flow)
+    - commit
+  - resolve_deferred_items: iterate current-build deferred items, resolve each or reroute with explicit destination update to pre-verify or next-cr
+  - update_ledger_status: mark resolved items with resolution evidence in deferred.md
+  - after_all_tasks:
+    - run_required_evidence
+    - run_existing_regression_suite
+    - if evidence_fails: STOP, fix evidence failures
+    - if evidence_passes: route to /h:verify if workflow_level == S, else to /h:review-pre-verify
+
+must_do:
+  - Strictly follow the Ponytail YAGNI framework when writing code
+  - Use the cheapest deterministic evidence that proves the task
+  - Use regression-first testing for bug fixes
+  - Use TDD only for deterministic invariants not provable by the functional flow
+  - Record why a required evidence item is not applicable
+  - Commit after each task
+  - Resolve or explicitly reroute assigned current-build deferred items
+  - Update ledger status with resolution evidence
+  - Regenerate the derived handover snapshot after build completes or fails (Supram runtime)
+
+must_not_do:
+  - Implement executable logic without its required evidence
+  - Add test categories excluded by the approved evidence contract without a discovered design gap
+  - Commit without passing required evidence
+  - Silently drop deferred items
+---
+<!-- Reference contract. Runtime execution and enforcement are provided by the Supram engine (paid offering). -->
