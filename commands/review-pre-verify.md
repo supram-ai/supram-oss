@@ -1,6 +1,6 @@
 ---
 name: harness-review-pre-verify
-description: Manager-spawned fresh-eyes review in isolated subagent context (for M/L-level only; S bypasses this gate). Do not run directly.
+description: 'Sr Tech Lead fresh-eyes review in isolated context. Not a human gate. Applicable to L-level projects only; S and M skip it. Do not run directly.'
 persona: Sr Tech Lead
 reason: Fresh-eyes review, completely isolated from the build process
 gates:

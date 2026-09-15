@@ -47,15 +47,16 @@ In the reference model each command runs in a **subagent** with the right person
 |---------|-----------------|-----------|---------|
 | `/h:init` | Manager | N/A — bootstrap | scaffold + constitution |
 | `/h:define` | Analyst | Reads BRD, writes spec.yaml (design + tasks internal) | spec.yaml |
+| `/h:approve` | Gatekeeper (human gate) | N/A — waits for human | Ref: APPROVED |
 | `/h:build` | Developer | Reads spec.yaml, writes code | code + evidence |
-| `/h:review-pre-verify` | Sr Tech Lead | Fresh context, no build memory | review report |
+| `/h:review-pre-verify` | Sr Tech Lead (L-level only) | Fresh context, no build memory | review report |
 | `/h:verify` | Gatekeeper | Runs evidence, writes report | verify/slice.yaml |
 | `/h:release` | Gatekeeper (human gate) | N/A — waits for human | merged PR |
 | `/h:change` | Developer | Reads change context, writes delta | CHG record + code |
 | `/h:status` | Manager | N/A — read only | status snapshot |
 
-Legacy contracts retained for reference (not part of the current flow): `/h:design`,
-`/h:tasks`, `/h:approve`, `/h:review-pre-build`.
+Legacy standalone contracts retained for reference (not part of the current flow): `/h:design`,
+`/h:tasks`, `/h:review-pre-build`.
 
 ### How Control Flows
 
@@ -63,6 +64,8 @@ Legacy contracts retained for reference (not part of the current flow): `/h:desi
 User says "build it"
   ↓
 Manager receives request
+  ↓
+Manager checks spec approval: spec.yaml Ref: APPROVED? (else route to /h:approve — Human Gate 1)
   ↓
 Manager spawns /h:build subagent (Developer persona)
   ↓
@@ -72,19 +75,17 @@ Subagent completes → returns control to Manager
   ↓
 Manager checks gates (all tasks complete? tests pass?)
   ↓
-Manager spawns /h:review-pre-verify subagent (Sr Tech Lead, isolated)
+IF workflow_level == L: Manager spawns /h:review-pre-verify (Sr Tech Lead, isolated)
   ↓
 Subagent reviews with fresh eyes → returns control to Manager
   ↓
-Manager checks verdict (PASS? APPROVED?)
-  ↓
 Manager spawns /h:verify subagent (Gatekeeper)
   ↓
-Subagent runs tests, writes verification.md → returns control
+Subagent runs tests, writes verify/slice.yaml → returns control
   ↓
 Manager checks Release Ref: PENDING
   ↓
-Manager waits for human approval (/h:release)
+Manager waits for human approval (/h:release — Human Gate 2)
 ```
 
 ### Gate Mechanism
@@ -92,13 +93,13 @@ Manager waits for human approval (/h:release)
 The state machine is in the **templates** (Ref: PENDING/APPROVED markers). Commands check these markers and route accordingly.
 
 ```
-spec.yaml Ref: PENDING → /h:define behaviour playback (human) → Ref: APPROVED
+spec.yaml Ref: PENDING → /h:approve (Human Gate 1) → Ref: APPROVED
   ↓
 build checks spec Ref: APPROVED (hard gate)
   ↓
-review-pre-verify Ref: PENDING (Sr Tech Lead subagent, fresh context) → APPROVED (agent gate)
+[L-level only] review-pre-verify Ref: PENDING (Sr Tech Lead subagent) → APPROVED
   ↓
-verify/slice.yaml Release Ref: PENDING → /h:release (human gate) → APPROVED
+verify/slice.yaml Release Ref: PENDING → /h:release (Human Gate 2) → APPROVED
 ```
 
 **Key insight**: Manager orchestrates. Subagents execute. Templates define the state machine.
@@ -136,7 +137,7 @@ User intent selects the desired outcome. Protocol state selects the next permitt
 ## Your Workflow Rules (NON-NEGOTIABLE)
 
 1. **MUST read `.supram-oss/CONSTITUTION.md` before every action**
-2. **NEVER start implementing before the spec is human-approved** (the behaviour playback in `/h:define`) — except for S-level projects which skip the design and tasks phase. If `workflow_level` is absent, default to M/L (full gates).
+2. **NEVER start implementing before the spec is human-approved via `/h:approve`** (Human Gate 1) — except for S-level projects which skip the design and tasks phase. If `workflow_level` is absent, default to M/L (full gates).
 3. **MUST write tests in the same commit as production code** — for deterministic invariants not reliably provable by the functional flow. Unconditional TDD and coverage percentages are not required for all levels; functional/integration evidence takes precedence.
 4. **The approved Evidence Contract and existing regression suite MUST pass before `verification.md` is filled** (enforced by the Supram engine)
 5. **The full project integration suite MUST pass before `verification.md`** — for M/L-level projects, or when level/risk requires it for S. During build, run only focused affected-only checks. (Enforced by the Supram engine.)
@@ -198,27 +199,31 @@ Read command files from `.supram-oss/commands/` and follow them. Users talk natu
 | Command | What happens | Gate |
 |---------|-------------|------|
 | `/h:init` | Scan docs, derive project.yaml, plan.yaml, constitution | — |
-| `/h:release` | **Human gate** — disclose deferred, approve, merge, archive feature | Human |
 | `/h:upgrade-harness` | Refresh the protocol reference; hand state to the paid product | — |
-| `review-pre-verify` | **Agent gate** — Sr Tech Lead review of build vs spec (Manager-spawned) | Agent |
+| `review-pre-verify` | **Agent review (L-level only)** — Sr Tech Lead review of build vs spec (Manager-spawned) | Agent review |
  
-## Two Gates
+## Gates
  
-The protocol defines two active gates. The Supram engine enforces them; you MUST stop at each gate and wait for approval.
- 
-1. **Agent review** (Agent) — `review-pre-verify`
-   - **When**: After build is complete (skipped for S-level)
-   - **Gate**: review-pre-verify.md must have `Ref: APPROVED`
-   - **Action**: Review code against spec.yaml, verify all requirements met
-   - **Cannot proceed** until review passes
-   - **Deferred items**: Non-blocker findings are deferred to ledger, not routed backward
- 
-2. **Release approval** (Human) — `/h:release`
+There are **two human gates**, plus an optional agent review for L-level projects. The Supram
+engine enforces them; you MUST stop at each human gate and wait for approval.
+
+1. **Human Gate 1 — `/h:approve`** (before build)
+   - **When**: After `/h:define` produces the spec, before implementation begins
+   - **Gate**: `spec.yaml` must have `Ref: APPROVED`
+   - **Action**: Present the full spec/design to the human, wait for explicit approval
+   - **Cannot proceed** to `/h:build` without it
+   - **S-level exception**: S-level projects skip the design/tasks phase; if `workflow_level` is absent, default to M/L.
+
+2. **Human Gate 2 — `/h:release`** (after verify)
    - **When**: After verification passes
-   - **Gate**: verify/slice.yaml (or verification.md) must have `Release Ref: APPROVED`
-   - **Action**: Present verification report and deferred items to human, wait for approval, then complete release
-   - **Cannot proceed** until human approves
- 
+   - **Gate**: `verify/slice.yaml` (or `verification.md`) must have `Release Ref: APPROVED`
+   - **Action**: Disclose deferred items, present the verification report, wait for approval, then merge/archive
+   - **Cannot proceed** without explicit human approval
+
+**Agent review (not a human gate, L-level only) — `review-pre-verify`**: a Sr Tech Lead
+fresh-context review of the build against the spec. It applies to L-level projects only; S and
+M skip it. Its verdict is an agent decision, not a human approval.
+
 **Why gates matter**: They prevent you from proceeding without explicit approval. This is the external accountability that catches blind spots.
 
 ## How to Resume a Session
@@ -292,16 +297,16 @@ Each command runs in an isolated subagent context with a specific persona:
 | **Analyst** | `/h:define` | `agents/collaborator/agent.md` | Explores the problem space and drafts the unified feature specification (`spec.yaml`, including design and tasks). |
 | **Sr Architect** | `/h:review-pre-build` (legacy) | `agents/sr-architect/agent.md` | Audits design documents against the BRD and constitution (legacy standalone flow). |
 | **Developer** | `/h:build`, `/h:change` | `agents/developer/agent.md` | Implements against the approved Evidence Contract and executes the unified bug/CR change workflow. |
-| **Sr Tech Lead** | `/h:review-pre-verify` | `agents/sr-tech-lead/agent.md` | Audits implementation against the approved spec, verifying alignment and conformance. |
-| **Gatekeeper** | `/h:verify`, `/h:release` | `agents/gatekeeper/agent.md` | Validates gate prerequisites, runs evidence validation, and transmits explicit human release approvals. |
+| **Sr Tech Lead** | `/h:review-pre-verify` (L only) | `agents/sr-tech-lead/agent.md` | Audits implementation against the approved spec, verifying alignment and conformance. |
+| **Gatekeeper** | `/h:approve`, `/h:verify`, `/h:release` | `agents/gatekeeper/agent.md` | Validates gate prerequisites, runs evidence validation, and transmits explicit human approvals at Gates 1 and 2. |
 
 
 ### Human and System Authority
-- **Human**: owns the release gate decision.
+- **Human**: owns both gate decisions (`/h:approve` before build, `/h:release` after verify).
 - **Gatekeeper**: validates readiness and transmits the explicit human decision.
 - **Manager**: coordinates but cannot perform specialist work itself. Writes review and verification reports through delegation.
 - **Sr Architect**: checks design before approval (legacy standalone flow).
-- **Sr Tech Lead**: checks implementation before verification.
+- **Sr Tech Lead**: checks implementation before verification (L-level projects).
 - **Analyst**: owns design research. Typography, branding, visual references, accessibility, BDD, TDD, and Event Storming are *skills*, not separate personas.
 
 ### Subagent Handover Pattern

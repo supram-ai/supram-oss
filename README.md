@@ -49,16 +49,17 @@ Claude, Copilot, or Cursor. The runtime is what makes it dependable.
 
 ## The Workflow
 
-The core philosophy is a bounded agent loop: agents work autonomously, and gates stop them
-until a fresh-eyes review or a human approves.
+The core philosophy is a bounded agent loop: agents work autonomously, and human gates stop
+them until a person approves.
 
 ```text
-/h:init → /h:define → /h:build → [Agent gate] → /h:verify → [Human gate] → /h:release
+/h:init → /h:define → [Human Gate 1: /h:approve] → /h:build
+        → [/h:review-pre-verify — L only] → /h:verify → [Human Gate 2: /h:release]
 ```
 
 Design and tasks are internalised by `/h:define`; they are not separate steps in the current
-model. Legacy standalone contracts (`/h:design`, `/h:tasks`, `/h:approve`, `/h:review-pre-build`)
-are retained under `commands/` for reference only.
+model. Legacy standalone contracts (`/h:design`, `/h:tasks`, `/h:review-pre-build`) are retained
+under `commands/` for reference only.
 
 ### Commands
 
@@ -68,10 +69,11 @@ Read the command contracts from `commands/` (installed projects: `.supram-oss/co
 |---------|--------------|-------------|------|
 | `/h:init` | Manager | Scan docs, derive constitution/BRD/architecture, plan phases | — |
 | `/h:define` | Analyst | Create `spec.yaml` from the BRD, including design and tasks | — |
+| `/h:approve` | Gatekeeper | **Human Gate 1** — approve the spec/design before build | Human |
 | `/h:build` | Developer | Implement against the approved Evidence Contract — one commit per task | — |
-| `/h:review-pre-verify` | Sr Tech Lead | Fresh-context review of build against the contract (M/L only) | Agent |
+| `/h:review-pre-verify` | Sr Tech Lead | Fresh-context review of build against the contract (**L only**) | Agent review |
 | `/h:verify` | Gatekeeper | Run approved evidence, check acceptance criteria, write verification | — |
-| `/h:release` | Gatekeeper | **Approve release** — disclose deferred, merge, archive, update status | Human |
+| `/h:release` | Gatekeeper | **Human Gate 2** — disclose deferred, merge, archive, update status | Human |
 | `/h:change` | Developer | Unified bug and CR workflow: baseline → smallest delta → verify | — |
 | `/h:status` | Manager | Project state snapshot (provided by the Supram engine) | — |
 | `/h:upgrade-harness` | Manager | Refresh the protocol reference; hand state to the paid product | — |
@@ -108,14 +110,16 @@ your-project/
 
 ## Gates
 
-The protocol defines two gates. The Supram engine enforces them deterministically; without the
-engine, the human is the enforcement point.
+There are **two human gates**, plus an optional agent review for L-level projects. The Supram
+engine enforces them deterministically; without the engine, the human is the enforcement point.
 
-1. **Agent gate — `/h:review-pre-verify`**: fresh-context review of the build against the
-   approved contract (skipped for S-level). Cannot proceed until the review verdict is approved.
-2. **Human gate — `/h:release`**: the human approves `Release Ref: APPROVED` in verification,
-   disclosures of deferred items are made, then the work is merged. Cannot proceed without
-   explicit human approval.
+1. **Human Gate 1 — `/h:approve`** (before build): the human approves `Ref: APPROVED` on the
+   spec/design produced by `/h:define`. Nothing may be implemented before this.
+2. **Human Gate 2 — `/h:release`** (after verify): the human approves `Release Ref: APPROVED`,
+   deferred items are disclosed, then the work is merged. Cannot proceed without explicit approval.
+
+**Agent review (not a human gate) — `/h:review-pre-verify`**: a Sr Tech Lead fresh-context review
+of the build against the spec. It applies to **L-level projects only**; S and M skip it.
 
 Quality comes from:
 - **Templates** — constrain LLM output with structure
