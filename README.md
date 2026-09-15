@@ -147,48 +147,6 @@ review them before adoption.
 
 ---
 
-## Migrating to the paid product
-
-When you adopt the paid product, your `.supram-oss/` project state migrates to `.supram/`.
-The migration is implemented by the **Supram CLI**, not by this repository; this repo only
-documents the state boundary. See [MIGRATION.md](MIGRATION.md). The protocol never needs to be
-re-learned; only the runtime boundary changes.
-
-`supram-oss` is the current name of the community edition and descends from `harness-eng`; the
-artifact schema, gates, and evidence contract are continuous across the rename. Engine-side
-migration is deferred to the CLI's port to `supram-cli` (see §0 of MIGRATION.md).
-
----
-
-## Design Philosophy
-
-> *The protocol is a convention, not a plugin.*
-
-Like HTTP works whether you use Chrome or curl — supram-oss works whether you use
-Claude, Copilot, or Cursor. The workflow is the protocol. The folder structure is the state machine.
-
----
-
-## Design Rationale
-
-The ideas behind this protocol — human gates, evidence contracts, and structured agent
-workflows — are documented in *Harness Engineering in Practice*:
-<https://avons.github.io/notes/harness-eng/> (upstream article; same method, prior naming).
-
-> A dedicated content engine (guides and an updated article) is planned for this repository.
-
----
-
-## Inspired By
-
-- **spec-kit** — Constitution/spec/plan/tasks separation
-- **OpenSpec** — Iterative flow, archive pattern
-- **modular/skills** — Agent Skills Standard
-- **BMAD** — Structured agentic development
-- **AI Manifesto** — Six principles for thinking clearly with AI
-
----
-
 ## License
 
 Copyright (c) 2026 Supram Code Tech Pvt Ltd. See [NOTICE](NOTICE).
