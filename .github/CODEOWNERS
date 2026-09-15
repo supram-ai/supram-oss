@@ -1,0 +1,14 @@
+# Default owners for everything in this repository.
+*                       @supram-ai/core
+
+# Protocol surface: maintainers of the public community edition.
+/commands/              @supram-ai/oss
+/templates/             @supram-ai/oss
+/agents/                @supram-ai/oss
+
+# Governance and contracts: org maintainers.
+/AGENTS.md              @supram-ai/core
+/MIGRATION.md           @supram-ai/core
+/README.md              @supram-ai/oss
+/LICENSE                @supram-ai/core
+/.github/               @supram-ai/core
