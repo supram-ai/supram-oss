@@ -1,6 +1,6 @@
 # Supram Canonical AGENTS.md Specification & Dual-Mode Fallback Contract
 
-**Document:** `supram-ideation/CANONICAL-AGENTS-SPEC.md`  
+**Document:** `supram-ideation/canonical-agents-spec.md`  
 **Applies to:** Supram Standard Edition & Team Edition  
 **Target File in Managed Repositories:** `<repo-root>/AGENTS.md` (and `.supram/AGENTS.md` fallback pointer)  
 **Date:** 2026-09-18 · **Revised:** 2026-09-25 (aligned with the shipped retrieval/impact tier — see `RETRIEVAL-S3-IMPACT-AND-LSP.md`)
