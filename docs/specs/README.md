@@ -6,7 +6,7 @@ template** that any agent/client can adopt, independent of the CLI.
 ## Normative specs (owned here)
 | spec | purpose | status |
 |---|---|---|
-| `CANONICAL-AGENTS-SPEC.md` (portable protocol/template) | agent contract + dual-mode fallback, client-agnostic | pending split from ideation |
+| `CANONICAL-AGENTS-SPEC.md` (portable protocol/template) | agent contract + dual-mode fallback, client-agnostic | **owned (moved)** |
 | OSS standard (`.supram/` format, licensing) | open standard | owned here |
 
 ## Imported cross-repo contracts (from `supram-contracts`)
